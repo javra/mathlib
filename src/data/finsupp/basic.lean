@@ -1730,10 +1730,11 @@ section multiset
 def to_multiset : (α →₀ ℕ) ≃+ multiset α :=
 { to_fun := λ f, f.sum (λa n, n • {a}),
   inv_fun := λ s, ⟨s.to_finset, λ a, s.count a, λ a, by simp⟩,
-  left_inv := λ f, ext $ λ a,
-    suffices (if f a = 0 then 0 else f a) = f a,
-    by simpa [finsupp.sum, multiset.count_sum', multiset.count_cons],
-    by split_ifs with h; [rw h, refl],
+  left_inv := λ f, ext $ λ a, by {
+      simp only [sum, multiset.count_sum', multiset.count_singleton, mul_boole, coe_mk,
+        multiset.mem_to_finset, iff_self, not_not, mem_support_iff, ite_eq_left_iff, ne.def,
+        multiset.count_eq_zero, multiset.count_nsmul, finset.sum_ite_eq, ite_not],
+      exact eq.symm },
   right_inv := λ s, by simp only [sum, coe_mk, multiset.to_finset_sum_count_nsmul_eq],
   map_add' := λ f g, sum_add_index (λ a, zero_nsmul _) (λ a, add_nsmul _) }
 
@@ -2402,7 +2403,7 @@ lemma to_finsupp_add (s t : multiset α) :
   to_finsupp (s + t) = to_finsupp s + to_finsupp t :=
 to_finsupp.map_add s t
 
-@[simp] lemma to_finsupp_singleton (a : α) : to_finsupp (a ::ₘ 0) = finsupp.single a 1 :=
+@[simp] lemma to_finsupp_singleton (a : α) : to_finsupp ({a} : multiset α) = finsupp.single a 1 :=
 finsupp.to_multiset.symm_apply_eq.2 $ by simp
 
 @[simp] lemma to_finsupp_to_multiset (s : multiset α) :

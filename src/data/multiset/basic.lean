@@ -340,7 +340,7 @@ instance : has_singleton α (multiset α) := ⟨λ a, a ::ₘ 0⟩
 
 instance : is_lawful_singleton α (multiset α) := ⟨λ a, rfl⟩
 
-@[simp] theorem singleton_eq_cons (a : α) : singleton a = a ::ₘ 0 := rfl
+theorem singleton_eq_cons (a : α) : singleton a = a ::ₘ 0 := rfl
 
 @[simp] theorem mem_singleton {a b : α} : b ∈ ({a} : multiset α) ↔ b = a :=
 by simp only [singleton_eq_cons, mem_cons, iff_self, or_false, not_mem_zero]
@@ -708,7 +708,7 @@ quotient.induction_on' s $ λ L, list.forall_mem_map_iff
 @[simp] theorem map_cons (f : α → β) (a s) : map f (a ::ₘ s) = f a ::ₘ map f s :=
 quot.induction_on s $ λ l, rfl
 
-lemma map_singleton (f : α → β) (a : α) : ({a} : multiset α).map f = {f a} := rfl
+@[simp] theorem map_singleton (f : α → β) (a : α) : ({a} : multiset α).map f = {f a} := rfl
 
 theorem map_repeat (f : α → β) (a : α) (k : ℕ) : (repeat a k).map f = repeat (f a) k := by
 { induction k, simp, simpa }
@@ -818,6 +818,10 @@ quot.lift_on s (λ l, foldr f b l)
   foldr f H b (a ::ₘ s) = f a (foldr f H b s) :=
 quot.induction_on s $ λ l, rfl
 
+@[simp] theorem foldr_singleton (f : α → β → β) (H b a) :
+  foldr f H b ({a} : multiset α) = f a b :=
+rfl
+
 @[simp] theorem foldr_add (f : α → β → β) (H b s t) :
   foldr f H b (s + t) = foldr f H (foldr f H b t) s :=
 quotient.induction_on₂ s t $ λ l₁ l₂, foldr_append _ _ _ _
@@ -907,7 +911,7 @@ theorem prod_zero [comm_monoid α] : @prod α _ 0 = 1 := rfl
 theorem prod_cons [comm_monoid α] (a : α) (s) : prod (a ::ₘ s) = a * prod s :=
 foldr_cons _ _ _ _ _
 
-@[to_additive]
+@[simp, to_additive]
 theorem prod_singleton [comm_monoid α] (a : α) : prod {a} = a :=
 by simp only [mul_one, prod_cons, singleton_eq_cons, eq_self_iff_true, prod_zero]
 
@@ -1130,7 +1134,7 @@ multiset.induction_on s (λ _, dvd_zero _)
     (h _ (mem_cons_self _ _)) (ih (λ y hy, h _ (mem_cons.2 (or.inr hy)))))
 
 @[simp] theorem sum_map_singleton (s : multiset α) : (s.map (λ a, ({a} : multiset α))).sum = s :=
-multiset.induction_on s (by simp) (by simp)
+multiset.induction_on s (by simp) (by simp [singleton_eq_cons])
 
 /-! ### Join -/
 
