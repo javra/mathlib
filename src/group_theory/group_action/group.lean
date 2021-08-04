@@ -52,7 +52,7 @@ mul_action.to_perm_injective mul_left_injective
 variables (α) (β)
 
 /-- Given an action of a group `α` on a set `β`, each `g : α` defines a permutation of `β`. -/
-def mul_action.to_perm_hom : α →* equiv.perm β≃ :=
+def mul_action.to_perm_hom : α →* equiv.perm β :=
 { to_fun := mul_action.to_perm,
   map_one' := equiv.ext $ one_smul α,
   map_mul' := λ u₁ u₂, equiv.ext $ mul_smul (u₁:α) u₂ }
