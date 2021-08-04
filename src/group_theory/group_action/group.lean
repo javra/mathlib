@@ -38,15 +38,21 @@ by rw [smul_smul, mul_right_inv, one_smul]
 /-- Given an action of an additive group `α` on `β`, each `g : α` defines a permutation of `β`. -/
 add_decl_doc add_action.to_perm
 
+/-- `mul_action.to_perm` is injective when `•` is injective. -/
+@[to_additive] lemma mul_action.to_perm_injective [nonempty β]
+  (hs : ∀ {b : β}, function.injective ((• b) : α → β)) :
+  function.injective (mul_action.to_perm : α → equiv.perm β) :=
+λ a₁ a₂ h, let ⟨b⟩ := ‹nonempty β› in hs $ equiv.congr_fun h b
+
 /-- `mul_action.to_perm` when applied to the action `monoid.to_mul_action` is injective. -/
-@[to_additive] lemma mul_action.to_perm_injective :
+@[to_additive] lemma mul_action.to_perm_injective_of_mul :
   function.injective (mul_action.to_perm : α → equiv.perm α) :=
-λ a₁ a₂ h, mul_left_injective _ (equiv.congr_fun h 1)
+mul_action.to_perm_injective mul_left_injective
 
 variables (α) (β)
 
 /-- Given an action of a group `α` on a set `β`, each `g : α` defines a permutation of `β`. -/
-def mul_action.to_perm_hom : α →* equiv.perm β :=
+def mul_action.to_perm_hom : α →* equiv.perm β≃ :=
 { to_fun := mul_action.to_perm,
   map_one' := equiv.ext $ one_smul α,
   map_mul' := λ u₁ u₂, equiv.ext $ mul_smul (u₁:α) u₂ }
