@@ -1194,8 +1194,8 @@ by simp [bind, join]
 multiset.induction_on s (by simp) (by simp [add_comm, add_left_comm] {contextual := tt})
 
 @[simp] theorem bind_singleton (s : multiset α) (f : α → β) :
-s.bind (λ x, ({f x} : multiset β)) = s.map f :=
-by { convert bind_cons s id (λ _, 0), rw [bind_cons], simp only [bind_zero, add_zero, singleton_eq_cons, eq_self_iff_true, bind_cons]}
+  bind s (λ x, ({f x} : multiset β)) = map f s :=
+multiset.induction_on s (by rw [zero_bind, map_zero]) (by simp [singleton_add])
 
 @[simp] theorem mem_bind {b s} {f : α → multiset β} : b ∈ bind s f ↔ ∃ a ∈ s, b ∈ f a :=
 by simp [bind]; simp [-exists_and_distrib_right, exists_and_distrib_right.symm];
