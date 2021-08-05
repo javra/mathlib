@@ -446,11 +446,7 @@ begin
 end
 
 lemma nsmul_cons {s : multiset α} (n : ℕ) (a : α) : n • (a ::ₘ s) = n • {a} + n • s :=
-begin
-  induction n with n ih,
-  { simp only [add_zero, zero_nsmul] },
-  { simp only [succ_nsmul, one_nsmul, ih, nsmul_add, add_cons, ←singleton_add] }
-end
+by rw [←singleton_add, nsmul_add]
 
 /-! ### Cardinality -/
 
@@ -1255,9 +1251,8 @@ by rw [product, list.product, ← coe_bind]; simp
 by simp [product]
 
 @[simp] theorem product_singleton (a : α) (b : β) :
-product ({a} : multiset α) ({b} : multiset β) = {(a,b)} :=
-by simp only [add_zero, zero_product, map_cons, singleton_eq_cons, eq_self_iff_true, cons_product,
-  cons_add, map_zero, cons_inj_right]
+  product ({a} : multiset α) ({b} : multiset β) = {(a,b)} :=
+by simp only [product, bind_singleton, map_singleton]
 
 @[simp] theorem add_product (s t : multiset α) (u : multiset β) :
   product (s + t) u = product s u + product t u :=

@@ -1791,10 +1791,6 @@ begin
     { exact pow_add  } }
 end
 
-lemma multiset.to_finset_singleton [decidable_eq α] (a : α) :
-multiset.to_finset ({a} : multiset α) = {a} :=
-by simp
-
 @[simp] lemma to_finset_to_multiset [decidable_eq α] (f : α →₀ ℕ) :
   f.to_multiset.to_finset = f.support :=
 begin
